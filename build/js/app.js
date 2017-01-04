@@ -9,7 +9,7 @@ function BikeList() {
 
 BikeList.prototype.getBikes = function (location, displayFunction) {
   var that = this;
-  $.get('https://bikeindex.org:443/api/v3/search?page=1&per_page=10&location=' + location + '&distance=10&stolenness=proximity&access_token=' + apiKey).then(function(response) {
+  $.get('https://bikeindex.org:443/api/v3/search?page=1&per_page=20&location=' + location + '&distance=10&stolenness=proximity&access_token=' + apiKey).then(function(response) {
     var bikeList = [];
     for(var i = 0; i<response.bikes.length; i++)
     {
@@ -23,9 +23,33 @@ BikeList.prototype.getBikes = function (location, displayFunction) {
   });
 };
 
+BikeList.prototype.getTitle = function(bike) {
+  var title = bike.title;
+  return title;
+}
+
+BikeList.prototype.getImage = function(bike) {
+  var image = bike.thumb;
+  return image;
+}
+
 BikeList.prototype.getColors = function (bike) {
-  console.log(bike.frame_colors);
+  var colors = bike.frame_colors;
+  colors = colors.join();
+  colors = colors.replace(/,/g , ', ');
+  return colors;
 };
+
+BikeList.prototype.getManufacturer = function(bike) {
+  var manufacturer = bike.manufacturer_name;
+  return manufacturer;
+}
+
+BikeList.prototype.getLocation = function(bike) {
+  var location = bike.stolen_location;
+  location = location.replace(/,/g , ', ');
+  return location;
+}
 
 exports.bikeModule = BikeList;
 
@@ -37,15 +61,31 @@ var displayBikes = function(bikes) {
   for(var i = 0; i<bikes.length; i++)
   {
     var newBike = new BikeList();
+    $("#output").append("<div class='bike'></div>");
+
+    var bikeTitle = newBike.getTitle(bikes[i]);
+    var bikeImage;
+    if (bikes[i].thumb != null) {
+      bikeImage = newBike.getImage(bikes[i]);
+    } else {
+      bikeImage = "./../img/placeholder.png";
+    }
     var bikeColors = newBike.getColors(bikes[i]);
+    var bikeManufacturer = newBike.getManufacturer(bikes[i]);
+    var bikeLocation = newBike.getLocation(bikes[i]);
+    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='biketitle'>" + bikeTitle + "</div>");
+    $('.bike:nth-child(' + (i + 1) + ')').append("<img class='thumb' src='" + bikeImage + "' alt='thumbnail'>");
+    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='bikecolor'>Colors: " + bikeColors + "</div>");
+    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='bikemanufacturer'>Manufacturer: " + bikeManufacturer + "</div>");
+    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='bikelocation'>Location: " + bikeLocation + "</div>");
   }
-  $('#output').text();
 }
 
 $(document).ready(function() {
   $('#input').submit(function(event) {
     event.preventDefault();
     var location = $('#location').val();
+    $("#output").empty();
     bikeSearch.getBikes(location, displayBikes);
   })
 });

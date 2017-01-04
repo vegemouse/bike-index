@@ -5,7 +5,7 @@ function BikeList() {
 
 BikeList.prototype.getBikes = function (location, displayFunction) {
   var that = this;
-  $.get('https://bikeindex.org:443/api/v3/search?page=1&per_page=10&location=' + location + '&distance=10&stolenness=proximity&access_token=' + apiKey).then(function(response) {
+  $.get('https://bikeindex.org:443/api/v3/search?page=1&per_page=20&location=' + location + '&distance=10&stolenness=proximity&access_token=' + apiKey).then(function(response) {
     var bikeList = [];
     for(var i = 0; i<response.bikes.length; i++)
     {
@@ -19,8 +19,32 @@ BikeList.prototype.getBikes = function (location, displayFunction) {
   });
 };
 
+BikeList.prototype.getTitle = function(bike) {
+  var title = bike.title;
+  return title;
+}
+
+BikeList.prototype.getImage = function(bike) {
+  var image = bike.thumb;
+  return image;
+}
+
 BikeList.prototype.getColors = function (bike) {
-  console.log(bike.frame_colors);
+  var colors = bike.frame_colors;
+  colors = colors.join();
+  colors = colors.replace(/,/g , ', ');
+  return colors;
 };
+
+BikeList.prototype.getManufacturer = function(bike) {
+  var manufacturer = bike.manufacturer_name;
+  return manufacturer;
+}
+
+BikeList.prototype.getLocation = function(bike) {
+  var location = bike.stolen_location;
+  location = location.replace(/,/g , ', ');
+  return location;
+}
 
 exports.bikeModule = BikeList;
