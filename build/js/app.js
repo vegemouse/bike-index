@@ -5,6 +5,7 @@ exports.apiKey = "ac3eca42141dca9307202116d8716cbf5392dd004dc46f54a39642976711a0
 var apiKey = require('./../.env');
 
 function BikeList() {
+
 }
 
 BikeList.prototype.getBikes = function (location, displayFunction) {
@@ -51,6 +52,14 @@ BikeList.prototype.getLocation = function(bike) {
   return location;
 }
 
+BikeList.prototype.getStolenDate = function (bike) {
+  var stolenDate = bike.date_stolen;
+  stolenDate = moment.unix(stolenDate)._d;
+  stolenDate = moment(stolenDate).format('MM.DD.YYYY');
+  console.log(stolenDate);
+  return stolenDate;
+};
+
 exports.bikeModule = BikeList;
 
 },{"./../.env":1}],3:[function(require,module,exports){
@@ -65,7 +74,7 @@ var displayBikes = function(bikes) {
 
     var bikeTitle = newBike.getTitle(bikes[i]);
     var bikeImage;
-    if (bikes[i].thumb != null) {
+    if (bikes[i].thumb !== null) {
       bikeImage = newBike.getImage(bikes[i]);
     } else {
       bikeImage = "./../img/placeholder.png";
@@ -73,11 +82,17 @@ var displayBikes = function(bikes) {
     var bikeColors = newBike.getColors(bikes[i]);
     var bikeManufacturer = newBike.getManufacturer(bikes[i]);
     var bikeLocation = newBike.getLocation(bikes[i]);
-    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='biketitle'>" + bikeTitle + "</div>");
+    var stolenDate = newBike.getStolenDate(bikes[i]);
+
     $('.bike:nth-child(' + (i + 1) + ')').append("<img class='thumb' src='" + bikeImage + "' alt='thumbnail'>");
-    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='bikecolor'>Colors: " + bikeColors + "</div>");
-    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='bikemanufacturer'>Manufacturer: " + bikeManufacturer + "</div>");
-    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='bikelocation'>Location: " + bikeLocation + "</div>");
+
+    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='bikeinfo'></div>");
+
+    $('.bike:nth-child(' + (i + 1) + ') .bikeinfo').append("<div class ='biketitle'>" + bikeTitle + "</div>");
+    $('.bike:nth-child(' + (i + 1) + ') .bikeinfo').append("<div class ='stolendate'><strong>Date Stolen:</strong> " + stolenDate + "</div>");
+    $('.bike:nth-child(' + (i + 1) + ') .bikeinfo').append("<div class ='bikecolor'><strong>Colors:</strong> " + bikeColors + "</div>");
+    $('.bike:nth-child(' + (i + 1) + ') .bikeinfo').append("<div class ='bikemanufacturer'><strong>Manufacturer:</strong> " + bikeManufacturer + "</div>");
+    $('.bike:nth-child(' + (i + 1) + ') .bikeinfo').append("<div class ='bikelocation'><strong>Location:</strong> " + bikeLocation + "</div>");
   }
 }
 

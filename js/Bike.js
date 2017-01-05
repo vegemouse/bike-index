@@ -1,6 +1,7 @@
 var apiKey = require('./../.env');
 
 function BikeList() {
+
 }
 
 BikeList.prototype.getBikes = function (location, displayFunction) {
@@ -46,5 +47,13 @@ BikeList.prototype.getLocation = function(bike) {
   location = location.replace(/,/g , ', ');
   return location;
 }
+
+BikeList.prototype.getStolenDate = function (bike) {
+  var stolenDate = bike.date_stolen;
+  stolenDate = moment.unix(stolenDate)._d;
+  stolenDate = moment(stolenDate).format('MM.DD.YYYY');
+  console.log(stolenDate);
+  return stolenDate;
+};
 
 exports.bikeModule = BikeList;

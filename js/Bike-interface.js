@@ -9,7 +9,7 @@ var displayBikes = function(bikes) {
 
     var bikeTitle = newBike.getTitle(bikes[i]);
     var bikeImage;
-    if (bikes[i].thumb != null) {
+    if (bikes[i].thumb !== null) {
       bikeImage = newBike.getImage(bikes[i]);
     } else {
       bikeImage = "./../img/placeholder.png";
@@ -17,11 +17,17 @@ var displayBikes = function(bikes) {
     var bikeColors = newBike.getColors(bikes[i]);
     var bikeManufacturer = newBike.getManufacturer(bikes[i]);
     var bikeLocation = newBike.getLocation(bikes[i]);
-    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='biketitle'>" + bikeTitle + "</div>");
+    var stolenDate = newBike.getStolenDate(bikes[i]);
+
     $('.bike:nth-child(' + (i + 1) + ')').append("<img class='thumb' src='" + bikeImage + "' alt='thumbnail'>");
-    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='bikecolor'>Colors: " + bikeColors + "</div>");
-    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='bikemanufacturer'>Manufacturer: " + bikeManufacturer + "</div>");
-    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='bikelocation'>Location: " + bikeLocation + "</div>");
+
+    $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='bikeinfo'></div>");
+
+    $('.bike:nth-child(' + (i + 1) + ') .bikeinfo').append("<div class ='biketitle'>" + bikeTitle + "</div>");
+    $('.bike:nth-child(' + (i + 1) + ') .bikeinfo').append("<div class ='stolendate'><strong>Date Stolen:</strong> " + stolenDate + "</div>");
+    $('.bike:nth-child(' + (i + 1) + ') .bikeinfo').append("<div class ='bikecolor'><strong>Colors:</strong> " + bikeColors + "</div>");
+    $('.bike:nth-child(' + (i + 1) + ') .bikeinfo').append("<div class ='bikemanufacturer'><strong>Manufacturer:</strong> " + bikeManufacturer + "</div>");
+    $('.bike:nth-child(' + (i + 1) + ') .bikeinfo').append("<div class ='bikelocation'><strong>Location:</strong> " + bikeLocation + "</div>");
   }
 }
 
