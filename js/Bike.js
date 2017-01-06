@@ -1,4 +1,5 @@
 var apiKey = require('./../.env');
+var googleMap = require('./../js/map.js').mapModule;
 
 function BikeList() {
 
@@ -12,9 +13,7 @@ BikeList.prototype.getBikes = function (location, displayFunction) {
     {
       bikeList.push(response.bikes[i]);
     }
-    console.log(bikeList);
     displayFunction(bikeList);
-    console.log(response);
   }).fail(function(error) {
     $('#output').text(error.responseJSON.message);
   });
@@ -52,8 +51,42 @@ BikeList.prototype.getStolenDate = function (bike) {
   var stolenDate = bike.date_stolen;
   stolenDate = moment.unix(stolenDate)._d;
   stolenDate = moment(stolenDate).format('MM.DD.YYYY');
-  console.log(stolenDate);
   return stolenDate;
 };
+
+var map;
+var mapCenter;
+BikeList.prototype.displayMap = function()
+{
+  mapCenter = {lat: 45, lng: -122};
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 8,
+    center: mapCenter
+  });
+  var marker = new google.maps.Marker({
+    position: mapCenter,
+    map: map
+  });
+
+}
+
+BikeList.prototype.getLatLong = function (locationsList) {
+  this.displayMap();
+  var latLng = [];
+  var latLngList = [];
+  var _this = this;
+  for (var i = 0; i<locationsList.length; i++) {
+    $.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + locationsList[i] + '&key=AIzaSyCErmpmZ3T4lR91u4FoiUT8yN1s8EP7_WU').then(function(response) {
+      mapCenter = {lat: response.results[0].geometry.location.lat, lng: response.results[0].geometry.location.lng};
+      console.log(mapCenter);
+      var marker = new google.maps.Marker({
+      position: mapCenter,
+      map: map
+      });
+      map.setCenter(mapCenter);
+      console.log(marker);
+    });
+  };
+}
 
 exports.bikeModule = BikeList;

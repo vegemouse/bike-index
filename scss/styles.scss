@@ -1,9 +1,22 @@
 * {
   box-sizing: border-box;
 }
-
 body {
   background-color: #000;
+}
+
+#map {
+  width: 100%;
+  max-width: 1200px;
+  height: 25%;
+  margin: 0 auto;
+}
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .wrapper {

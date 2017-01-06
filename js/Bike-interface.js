@@ -1,5 +1,6 @@
 var BikeList = require('./../js/Bike.js').bikeModule;
 var bikeSearch = new BikeList();
+var locationsList = [];
 
 var displayBikes = function(bikes) {
   for(var i = 0; i<bikes.length; i++)
@@ -17,8 +18,9 @@ var displayBikes = function(bikes) {
     var bikeColors = newBike.getColors(bikes[i]);
     var bikeManufacturer = newBike.getManufacturer(bikes[i]);
     var bikeLocation = newBike.getLocation(bikes[i]);
-    var stolenDate = newBike.getStolenDate(bikes[i]);
+    locationsList.push(bikeLocation);
 
+    var stolenDate = newBike.getStolenDate(bikes[i]);
     $('.bike:nth-child(' + (i + 1) + ')').append("<img class='thumb' src='" + bikeImage + "' alt='thumbnail'>");
 
     $('.bike:nth-child(' + (i + 1) + ')').append("<div class ='bikeinfo'></div>");
@@ -29,7 +31,9 @@ var displayBikes = function(bikes) {
     $('.bike:nth-child(' + (i + 1) + ') .bikeinfo').append("<div class ='bikemanufacturer'><strong>Manufacturer:</strong> " + bikeManufacturer + "</div>");
     $('.bike:nth-child(' + (i + 1) + ') .bikeinfo').append("<div class ='bikelocation'><strong>Location:</strong> " + bikeLocation + "</div>");
   }
+    bikeSearch.getLatLong(locationsList);
 }
+
 
 $(document).ready(function() {
   $('#input').submit(function(event) {
@@ -37,5 +41,6 @@ $(document).ready(function() {
     var location = $('#location').val();
     $("#output").empty();
     bikeSearch.getBikes(location, displayBikes);
+    console.log(locationsList);
   })
 });
